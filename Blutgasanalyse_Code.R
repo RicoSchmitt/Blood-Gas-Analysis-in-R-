@@ -175,3 +175,53 @@ pH = 7.48
 BGA(pH,pCO2)
 
 
+
+##############
+#### GUI #####
+##############
+
+# Load the required package
+library(shiny)
+
+
+# Define the UI
+ui <- fluidPage(
+  titlePanel("Bloodgas Analysis"),
+
+  sidebarLayout(
+    sidebarPanel(
+      numericInput("pH", "pH:", value = 7.22, min = 0),
+      numericInput("Bikarb", "Bikarb:", value = 20, min = 0),
+      numericInput("Stand_Bikarb", "Stand. Bikarb:", value = 20, min = 0),
+      numericInput("Base_Ex", "Base Ex:", value = -20, min = -50, max = 50),
+      numericInput("pC02", "pC02:", value = 46, min = 0),
+      actionButton("submit", "Calculate Diagnosis")
+    ),
+
+    mainPanel(
+      textOutput("diagnosis")
+    )
+  )
+)
+
+# Define the server
+server <- function(input, output) {
+
+  # Include the BGA function from the provided code
+  # ... (paste the BGA function here)
+
+  # Define the reactive event to execute the BGA function
+  result <- eventReactive(input$submit, {
+    BGA(input$pH, input$Bikarb, input$Stand_Bikarb, input$Base_Ex, input$pC02)
+  })
+
+  # Display the diagnosis
+  output$diagnosis <- renderText({
+    result()
+  })
+}
+
+####################
+### Execute GUI ####
+####################
+shinyApp(ui = ui, server = server)
